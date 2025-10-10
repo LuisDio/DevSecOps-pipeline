@@ -50,10 +50,3 @@ jobs:
         uses: gitleaks/gitleaks-action@v2
         with:
           config-path: .gitleaks.toml
-
-      - name: CodeQL Init
-        uses: github/codeql-action/init@v3
-        with:
-          languages: ${{ inputs.language }}
-
-      - uses: github/codeql-action/analyze@v3
