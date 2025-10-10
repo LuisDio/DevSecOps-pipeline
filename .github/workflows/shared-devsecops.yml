@@ -1,0 +1,40 @@
+name: Shared DevSecOps Pipeline
+
+on:
+  workflow_call:
+    inputs:
+      app-name:
+        required: true
+        type: string
+      language:
+        required: true
+        type: string
+
+jobs:
+  build:
+    name: Build & Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up build environment
+        uses: actions/setup-node@v3
+        if: ${{ inputs.language == 'javascript' }}
+        with:
+          node-version: "18"
+
+      - name: Install dependencies
+        run: |
+          if [ "${{ inputs.language }}" = "javascript" ]; then
+            npm ci
+          elif [ "${{ inputs.language }}" = "python" ]; then
+            pip install -r requirements.txt
+          fi
+
+      - name: Run tests
+        run: |
+          if [ "${{ inputs.language }}" = "javascript" ]; then
+            npm test
+          elif [ "${{ inputs.language }}" = "python" ]; then
+            pytest
+          fi
